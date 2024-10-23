@@ -1,4 +1,5 @@
 import os
+import platform
 from shutil import which
 
 from fsociety.core.menu import set_readline
@@ -10,8 +11,11 @@ arch_map = {"x86_64": "amd64", "i386": "386"}
 
 class TraitorRepo(GitHubRepo):
     def __init__(self):
-        if os.uname().machine in arch_map:
-            self.arch = arch_map.get(os.uname().machine)
+        if "nt" in os.name:
+            self.arch = ""
+            # same as if there's nothing matching, but prevents default checking uname, which only works on posix
+        elif platform.uname().machine in arch_map:
+            self.arch = arch_map.get(platform.uname().machine)
         else:
             self.arch = ""
         self.version = "v0.0.14"
